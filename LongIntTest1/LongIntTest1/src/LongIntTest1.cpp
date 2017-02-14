@@ -6,26 +6,32 @@
 #include <time.h>
 #include <thread>
 #include "base94DefinedStructures.h"
+#include "base94functions.h"
 
 
+bool found = false;
+BIG   password = 0x0;
 
 
-
-
-bool loopIt(int pIndex, int pNum, BIG* arr, char* pass, BIG pSIZE)
+bool loopIt(int pIndex, int pNum, BIG* arr, BIG pass, BIG pSIZE)
 {
- 
+	if(found)
+	{
+		return true;
+	}
 	BIG START = pIndex * pSIZE;
 	BIG END = START + pSIZE;
 	BIG i = START;
 	for (; i < END; ++i)
 	{
-		if (0xabcd == 0xabd) {
-			std::cout << "Found password!" << std::endl;
+		base94ToString(pass,6);
+		if (i == pass) {
+			found = true;
+			password = i;
 		}
 	}
 
-	std::cout << "Partition: " << std::hex << i << std::endl;
+	//std::cout << "Partition: " << std::hex << i << std::endl;
 
 	return true;
 }
@@ -40,8 +46,7 @@ int main()
 	time_t old_time;
 	time_t new_time;
 
-	char* pass = "kamilp";
-
+	BIG pass = 0x8157CB4C8C;// "kamilp"
 
 
 	BIG WORD = 0xA09F717840;
@@ -166,6 +171,13 @@ int main()
 
 	time(&new_time);
 
+	if (found) {
+		std::cout << "Pasword is: " << std::hex << password << std::endl;
+	}
+	else {
+		std::cout << "Password is too long or contains other than standard characters" << std::endl;
+	}
+
 	std::cout << "Time elapsed: " << new_time - old_time << std::endl;
 	system("pause");
 
@@ -174,8 +186,10 @@ int main()
 
 
 
-
 	
     return 0;
 }
+
+
+
 
